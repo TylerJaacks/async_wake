@@ -16,14 +16,45 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
+    isJailbroken  = [Utility isJailbrokenAlready];
+    
+    [_iDeviceLabel setText:[[UIDevice currentDevice] model]];
+    
+    [_iOSVersionLabel setText:[UIDevice currentDevice].systemVersion];
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)JailbreakDevice:(id)sender {
+    if ([Utility isSupported]) {
+        [Utility StartJailbreak];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Version is Not Supported!"
+                                                        message:@"Your version of iOS is not supported."
+                                                       delegate:self
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+
+    }
+    
+    if (![Utility isJailbrokenAlready]) {
+        NSLog(@"Starting the Jailbreak process sit tight and wait for the process to finish, please do not lock, exit the app, or shutdown the device.");
+        [Utility StartJailbreak];
+        isJailbroken = YES;
+    } else {
+        NSLog(@"The device is already jailbroken, if you are having trouble reboot the device and try again.");
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Your device is already Jailbroken!;"
+                                                        message:@"If you are having issue please try restarting your device and try again."
+                                                       delegate:self
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+}
 
 @end
